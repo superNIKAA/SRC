@@ -1,25 +1,35 @@
-let P0 = {x: 50, y: 350, relativX: undefined, relativY: undefined};
-let P1 = {x: 100, y: 50, relativX: undefined, relativY: undefined};
-let P2 = {x: 300, y: 50, relativX: undefined, relativY: undefined};
-let P3 = {x: 350, y: 350, relativX: undefined, relativY: undefined};
+let P0 = {x: 50, y: 300, relativX: undefined, relativY: undefined};
+let P1 = {x: 200, y: 300, relativX: undefined, relativY: undefined};
+let P2 = {x: 400, y: 300, relativX: undefined, relativY: undefined};
+let P3 = {x: 750, y: 300, relativX: undefined, relativY: undefined};
 let A = {x: undefined, y: undefined};
 let B = {x: undefined, y: undefined};
 let C = {x: undefined, y: undefined};
 let D = {x: undefined, y: undefined};
 let E = {x: undefined, y: undefined};
 let P = {x: undefined, y: undefined};
-let t=0
-let pd=20
+let t=1;
+let pd=10;
+//bezier curvens tykkelse
+let cs=100;
 
 let bezierPoints = [P0,P1,P2,P3]
 
 function setup() {
   createCanvas(800, 600);
+  randomizePoints();
+}
+
+function randomizePoints() {
+  for (let i = 0; i < bezierPoints.length; i++) {
+    bezierPoints[i].x = random(width);
+    bezierPoints[i].y = random(height);
+  }
 }
 
 function draw() {
-  background(220);
-  fill(200,0,0);
+  background(0);
+  fill(255);
   noStroke();
   movePoint()
   for(let t=0; t<1; t+=0.001){
@@ -46,6 +56,7 @@ function calcBezier(t){
   P.y=lerp(D.y,E.y,t)
 }
 
+
 function supportLines(){
   line(P0.x,P0.y,P1.x,P1.y);
   line(P1.x,P1.y,P2.x,P2.y);
@@ -53,7 +64,7 @@ function supportLines(){
 }
 
 function drawBezier(){
-  circle(P.x,P.y,15);
+  circle(P.x,P.y,cs);
 }
 
 function drawPoints(){
