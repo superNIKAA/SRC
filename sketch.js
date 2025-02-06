@@ -1,19 +1,32 @@
+//Control punkter
 let P0 = {x: 50, y: 300, relativX: undefined, relativY: undefined};
 let P1 = {x: 200, y: 300, relativX: undefined, relativY: undefined};
 let P2 = {x: 400, y: 300, relativX: undefined, relativY: undefined};
 let P3 = {x: 750, y: 300, relativX: undefined, relativY: undefined};
+let P4 = {x: 100, y: 500, relativX: undefined, relativY: undefined};
+//Sekundere punkter
 let A = {x: undefined, y: undefined};
 let B = {x: undefined, y: undefined};
 let C = {x: undefined, y: undefined};
 let D = {x: undefined, y: undefined};
+//3 punkter
 let E = {x: undefined, y: undefined};
-let P = {x: undefined, y: undefined};
-let t=1;
-let pd=10;
-//bezier curvens tykkelse
-let cs=100;
+let F = {x: undefined, y: undefined};
+let G = {x: undefined, y: undefined};
+//4 punkter
+let H = {x: undefined, y: undefined};
+let I = {x: undefined, y: undefined};
 
-let bezierPoints = [P0,P1,P2,P3]
+let P = {x: undefined, y: undefined};
+
+
+let t=1;
+let t_bil=0;
+let pd=1;
+//bezier curvens tykkelse
+let cs=50;
+
+let bezierPoints = [P0,P1,P2,P3,P4]
 
 function setup() {
   createCanvas(800, 600);
@@ -28,10 +41,11 @@ function randomizePoints() {
 }
 
 function draw() {
-  background(0);
-  fill(255);
+  background(130,180,199);
+  rectMode(CENTER)
+  
+  fill(170);
   noStroke();
-  movePoint()
   for(let t=0; t<1; t+=0.001){
     calcBezier(t);
     drawBezier();
@@ -39,21 +53,55 @@ function draw() {
   fill(255);
   stroke(1);
   drawPoints()
+  
+
+  //Bil
+  angleMode(DEGREES)
+  calcBezier(t_bil);
+  translate(P.x,P.y);
+
+  //Regning af bil vinkel
+  angleX=-P.x;
+  angleY=-P.y;
+
+  calcBezier(t_bil+0.01);
+
+  angleX+=P.x;
+  angleY+=P.y;
+
+  rotate(-atan(angleX/angleY));
+
+  rect(0,0,3,5);
+  t_bil+=0.01
+  if(t_bil>=1){
+    t_bil=0;
+  }
+  rotate(atan(angleX/angleY));
+  translate(-P.x,-P.y)
 }
 
 function calcBezier(t){
-  A.x=lerp(P0.x,P1.x,t)
-  A.y=lerp(P0.y,P1.y,t)
-  B.x=lerp(P1.x,P2.x,t)
-  B.y=lerp(P1.y,P2.y,t)
-  C.x=lerp(P2.x,P3.x,t)
-  C.y=lerp(P2.y,P3.y,t)
-  D.x=lerp(A.x,B.x,t)
-  D.y=lerp(A.y,B.y,t)
-  E.x=lerp(B.x,C.x,t)
-  E.y=lerp(B.y,C.y,t)
-  P.x=lerp(D.x,E.x,t)
-  P.y=lerp(D.y,E.y,t)
+  //Sekundere punkter
+  lerp2D(A,P0,P1,t)
+  lerp2D(B,P1,P2,t)
+  lerp2D(C,P2,P3,t)
+  lerp2D(D,P3,P4,t)
+  //3
+  lerp2D(E,A,B,t)
+  lerp2D(F,B,C,t)
+  lerp2D(G,C,D,t)
+  //4
+  lerp2D(H,E,F,t)
+  lerp2D(I,F,G,t)
+  //P
+  lerp2D(P,H,I,t);
+
+
+}
+
+function lerp2D(newPoint,p_1,p_2,time){
+  newPoint.x=lerp(p_1.x,p_2.x,time)
+  newPoint.y=lerp(p_1.y,p_2.y,time)
 }
 
 
@@ -61,6 +109,7 @@ function supportLines(){
   line(P0.x,P0.y,P1.x,P1.y);
   line(P1.x,P1.y,P2.x,P2.y);
   line(P2.x,P2.y,P3.x,P3.y);
+  line(P3.x,P3.y,P4.x,P4.y);
 }
 
 function drawBezier(){
@@ -72,31 +121,6 @@ function drawPoints(){
   circle(P1.x,P1.y,pd);
   circle(P2.x,P2.y,pd);
   circle(P3.x,P3.y,pd);
+  circle(P4.x,P4.y,pd);
 }
 
-function movePoint(){
-  for(let i=0; i<bezierPoints.length;i++){
-    if(bezierPoints[i].relativX!=undefined){
-      bezierPoints[i].x=mouseX+bezierPoints[i].relativX
-      bezierPoints[i].y=mouseY+bezierPoints[i].relativY
-    }
-  } 
-}
-
-function mousePressed(){
-  for(let i=0; i<bezierPoints.length;i++){
-    if(dist(bezierPoints[i].x,bezierPoints[i].y,mouseX,mouseY)<pd/2){
-      bezierPoints[i].relativX=bezierPoints[i].x-mouseX
-      bezierPoints[i].relativY=bezierPoints[i].y-mouseY
-    }
-  } 
-}
-
-function mouseReleased(){
-  for(let i=0; i<bezierPoints.length;i++){
-    bezierPoints[i].relativX=undefined
-    bezierPoints[i].relativY=undefined
-  } 
-}
-
-let k=0;
