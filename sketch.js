@@ -22,7 +22,7 @@ let P = {x: undefined, y: undefined};
 
 let t=1;
 let t_bil=0;
-let pd=1;
+let pd=10;
 //bezier curvens tykkelse
 let cs=50;
 
@@ -70,9 +70,9 @@ function draw() {
   angleY+=P.y;
 
   rotate(-atan(angleX/angleY));
-
-  rect(0,0,3,5);
-  t_bil+=0.01
+  fill (80,170,200)
+  rect(0,0,5,7);
+  t_bil+=0.006
   if(t_bil>=1){
     t_bil=0;
   }
