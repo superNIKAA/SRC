@@ -28,20 +28,23 @@ let cs=50;
 
 let bezierPoints = [P0,P1,P2,P3,P4]
 
+
 function setup() {
   createCanvas(800, 600);
   randomizePoints();
+
 }
 
 function randomizePoints() {
   for (let i = 0; i < bezierPoints.length; i++) {
     bezierPoints[i].x = random(width);
     bezierPoints[i].y = random(height);
+    
   }
 }
 
 function draw() {
-  background(130,180,199);
+  background(120,200,255);
   rectMode(CENTER)
   
   fill(170);
@@ -53,6 +56,12 @@ function draw() {
   fill(255);
   stroke(1);
   drawPoints()
+  textSize(12)
+  text("P0",P0.x, P0.y, - 10)
+  text("P1",P1.x, P1.y, - 10)
+  text("P2",P2.x, P2.y, - 10)
+  text("P3",P3.x, P3.y, - 10)
+  text("P4",P4.x, P4.y, - 10)
   
 
   //Bil
@@ -70,14 +79,18 @@ function draw() {
   angleY+=P.y;
 
   rotate(-atan(angleX/angleY));
-  fill (80,170,200)
-  rect(0,0,5,7);
+  fill (250,200,120)
+  rect(0,0,10,20);
   t_bil+=0.006
   if(t_bil>=1){
     t_bil=0;
+
+    randomizePoints();
   }
   rotate(atan(angleX/angleY));
   translate(-P.x,-P.y)
+
+  
 }
 
 function calcBezier(t){
@@ -95,8 +108,6 @@ function calcBezier(t){
   lerp2D(I,F,G,t)
   //P
   lerp2D(P,H,I,t);
-
-
 }
 
 function lerp2D(newPoint,p_1,p_2,time){
